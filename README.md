@@ -1,9 +1,9 @@
 # astrosim
 A astrophysics simulation software
 
---
+---
 
-MIT License
+# MIT License
 
 Copyright (c) 2018 ebraendli
 
