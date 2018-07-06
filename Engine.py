@@ -1,6 +1,6 @@
 # coding=UTF-8
 import numpy as np
-from sympy import Symbol, solve
+from sympy import *
 from scipy import constants
 import Star
 import Planet
@@ -47,7 +47,7 @@ class Engine:
         b1posv = np.array(Body1.pos)
         richtv = distv / dist
         # print(distv)
-        for i in range(0, 3):
+        for i in range(0, richtv.size):
             if np.isnan(richtv[i]):
                 richtv[i] = 0
         sp = b1posv + richtv * a1x
@@ -84,13 +84,37 @@ class Engine:
     def calc_period(self, body):
         if body.has_orbit():
             v = np.array(body.orbit.sp) - np.array(body.pos)
-            np.abs(np.dot(v, v)) ** (1 / 2)
+            r = np.abs(np.dot(v, v)) ** (1 / 2)
+            if body.orbit.speed is not None:
+                return 2 * r * constants.pi / body.orbit.speed
+            else:
+                p = 2 * r * constants.pi / self.calc_speed(body)
+                return p
+        else:
+            raise Exception("Assign Orbit first")
+
+    def calc_simp_orbit(self, body):
+        v = np.array(body.pos) - np.array(body.orbit.sp)
+        r = np.abs(np.dot(v, v)) ** (1 / 2)
+        theta, phi = symbols("theta phi")
+        if v.size == 3:
+            the = acos(v[3] / r)
+        elif v.size == 2:
+            theta = pi / 2
+        else:
+            raise Exception("Unknown Dimensions")
+
+        pih = atan2(v[1], v[0])
+        term = [r * cos(t), r * sin(t)]
+        termx = r * cos(phi) * sin(theta)
+        termy = r * sin(phi) * sin(theta)
+        termz = r * cos(theta)
 
 
 if __name__ == '__main__':
     e = Engine()
-    sun = Star.Star(2 * 10 ** 30, [0, 0, 0], name='sun')
-    earth = Planet.Planet(6 * 10 ** 24, [constants.astronomical_unit, 0, 0], name='earth')
+    sun = Star.Star(2.0 * 10 ** 30, [0, 0], name='sun')
+    earth = Planet.Planet(5.972 * 10 ** 24, [constants.astronomical_unit, constants.astronomical_unit], name='earth')
     earth.set_orbit(orbit=Orbit.Orbit(orbital_body=sun, self_body=earth))
     e.add_body(sun)
     e.add_body(earth)
@@ -98,5 +122,9 @@ if __name__ == '__main__':
     earth.orbit.sp = erg
     erg = e.calc_speed(earth)
     earth.orbit.speed = erg
-
+    erg = e.calc_period(earth)
+    print(str(erg) + " sec -> " + str(erg / 31536000) + "years")
     e.print_status()
+
+    # for i in range(0, 9 * 10 ** 4):
+    #    print(i)

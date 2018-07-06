@@ -3,12 +3,13 @@ from Body import *
 
 
 class Orbit:
-    def __init__(self, orbital_body, self_body=None, schwerpunkt=None, speed=None, period=None):
+    def __init__(self, orbital_body, self_body=None, schwerpunkt=None, speed=None, period=None, track=None):
         self.bd = self_body
         self.mother = orbital_body
         self.sp = schwerpunkt
         self.speed = speed
         self.period = period
+        self.track = track
 
 
 """ ATTRIBUTES
