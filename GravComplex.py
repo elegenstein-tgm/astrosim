@@ -5,6 +5,5 @@ class Solarsystem:
     def add_body(self, body):
         self.bodies.append(body)
 
-    def set_star(self,body):
-        self.bodies.insert(-1,body)
-
+    def set_star(self, body):
+        self.bodies.insert(-1, body)

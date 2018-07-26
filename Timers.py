@@ -1,6 +1,3 @@
-from threading import Thread
-
-
 class Timer:
     def __init__(self, duration, ticks):
         self.duration = duration

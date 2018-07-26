@@ -10,7 +10,7 @@ class Planet(Body):
     :author:
     """
 
-    def __init__(self, mass, pos, name = 'Planet'):
+    def __init__(self, mass, pos, name='Planet'):
         super(Planet, self).__init__(mass, pos, name, None)
 
     pass
